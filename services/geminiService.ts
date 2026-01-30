@@ -2,13 +2,23 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { AIAnalysis } from '../types';
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+const ai = apiKey ? new GoogleGenAI({ apiKey }) : null;
 
 export const analyzeComplaint = async (
   description: string,
   language: string,
   imageBase64?: string
 ): Promise<AIAnalysis> => {
+  if (!ai) {
+    console.error("Gemini AI not initialized (missing API key)");
+    return {
+      category: "Pending Review",
+      priority: "Medium",
+      department: "General Administration",
+      actionPlan: ["Review complaint text manually", "Dispatch assessment team"]
+    };
+  }
   try {
     const prompt = `
       You are an environmental expert analyzing citizen complaints.
@@ -35,7 +45,7 @@ export const analyzeComplaint = async (
     }
 
     const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
+      model: "gemini-1.5-flash",
       contents: { parts },
       config: {
         responseMimeType: "application/json",
@@ -83,9 +93,15 @@ export const searchNearbyServices = async (
   lat: number,
   lng: number
 ): Promise<MapsResult> => {
+  if (!ai) {
+    return {
+      text: "Nearby services search unavailable (AI not initialized).",
+      links: []
+    };
+  }
   try {
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-1.5-flash",
       contents: query,
       config: {
         tools: [{ googleMaps: {} }],
