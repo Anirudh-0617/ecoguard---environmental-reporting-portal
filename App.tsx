@@ -44,33 +44,7 @@ const App: React.FC = () => {
 
                 {/* Public */}
                 <Route path="/login" element={<LoginPage />} />
-
-                {/* Secure Portal */}
-                <Route path="/dashboard" element={
-                  <ProtectedRoute allowedRoles={[UserRole.CITIZEN, UserRole.GUEST, UserRole.OFFICIAL]}>
-                    <DashboardPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/report" element={
-                  <ProtectedRoute allowedRoles={[UserRole.CITIZEN, UserRole.GUEST, UserRole.OFFICIAL]}>
-                    <ReportIssuePage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/track" element={
-                  <ProtectedRoute allowedRoles={[UserRole.CITIZEN, UserRole.GUEST, UserRole.OFFICIAL]}>
-                    <TrackComplaintsPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/community" element={
-                  <ProtectedRoute allowedRoles={[UserRole.CITIZEN, UserRole.GUEST, UserRole.OFFICIAL]}>
-                    <CommunityReportsPage />
-                  </ProtectedRoute>
-                } />
-                <Route path="/resources" element={
-                  <ProtectedRoute allowedRoles={[UserRole.CITIZEN, UserRole.GUEST, UserRole.OFFICIAL]}>
-                    <ResourcesPage />
-                  </ProtectedRoute>
-                } />
+                <Route path="/resources" element={<ResourcesPage />} />
 
                 {/* Official */}
                 <Route path="/official/dashboard" element={
