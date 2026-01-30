@@ -52,7 +52,7 @@ const AnalyticsPage: React.FC = () => {
   // Compute stats
   const total = data.length;
   const resolved = data.filter(c => c.status === ComplaintStatus.RESOLVED).length;
-  const resolutionRate = total > 0 ? ((resolved / total) * 100).toFixed(1) : 0;
+  const resolutionRate = total > 0 ? Number(((resolved / total) * 100).toFixed(1)) : 0;
 
   // Category Distribution
   const categoryMap: Record<string, number> = {};

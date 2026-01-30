@@ -16,7 +16,7 @@ import Footer from './components/Shared/Footer';
 import ProtectedRoute from './components/Shared/ProtectedRoute';
 import { UserRole } from './types';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
-import { LanguageProvider } from './context/LanguageContext';
+import { LanguageProvider } from './contexts/LanguageContext';
 
 const RootRoute: React.FC = () => {
   const { user, isAuthenticated } = useAuth();

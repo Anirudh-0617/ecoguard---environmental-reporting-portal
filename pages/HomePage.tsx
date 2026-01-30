@@ -33,15 +33,18 @@ const HomePage: React.FC = () => {
   const [stats, setStats] = useState({ total: 0, resolved: 0, active: 0 });
 
   useEffect(() => {
-    const all = getComplaints();
-    setRecentComplaints(all.slice(-4).reverse());
-    
-    const resolvedCount = all.filter(c => c.status === ComplaintStatus.RESOLVED).length;
-    setStats({
-      total: all.length,
-      resolved: resolvedCount,
-      active: all.length - resolvedCount
-    });
+    const loadStats = async () => {
+      const all = await getComplaints();
+      setRecentComplaints(all.slice(-4).reverse());
+
+      const resolvedCount = all.filter(c => c.status === ComplaintStatus.RESOLVED).length;
+      setStats({
+        total: all.length,
+        resolved: resolvedCount,
+        active: all.length - resolvedCount
+      });
+    };
+    loadStats();
   }, []);
 
   const handleSearchNearby = async (query: string) => {

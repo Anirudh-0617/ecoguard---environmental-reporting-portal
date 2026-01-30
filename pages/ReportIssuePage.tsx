@@ -131,7 +131,7 @@ const ReportIssuePage: React.FC = () => {
         userId: getCurrentUser()?.id
       };
 
-      saveComplaint(newComplaint);
+      await saveComplaint(newComplaint);
       setSuccessId(complaintId);
     } catch (err) {
       console.error(err);

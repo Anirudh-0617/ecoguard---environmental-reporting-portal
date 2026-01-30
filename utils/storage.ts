@@ -92,7 +92,6 @@ export const getComplaintById = async (id: string): Promise<Complaint | undefine
     }
   }
   return getLocalComplaintById(id);
-  return getLocalComplaintById(id);
 };
 
 export const deleteComplaint = async (id: string): Promise<void> => {
