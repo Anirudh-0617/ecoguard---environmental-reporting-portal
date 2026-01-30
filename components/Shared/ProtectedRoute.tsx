@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { getCurrentUser, isAuthenticated } from '../../utils/auth';
+import { useAuth } from '../../contexts/AuthContext';
 import { UserRole } from '../../types';
 
 interface Props {
@@ -10,10 +10,9 @@ interface Props {
 }
 
 const ProtectedRoute: React.FC<Props> = ({ children, allowedRoles }) => {
-  const user = getCurrentUser();
-  const auth = isAuthenticated();
+  const { user, isAuthenticated } = useAuth();
 
-  if (!auth || !user) {
+  if (!isAuthenticated || !user) {
     return <Navigate to="/login" replace />;
   }
 

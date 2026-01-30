@@ -3,27 +3,30 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Leaf, Menu, X, LogOut, User as UserIcon } from 'lucide-react';
 import { useLanguage } from '../../hooks/useLanguage';
-import { getCurrentUser, logoutUser, isOfficial, isAuthenticated } from '../../utils/auth';
+import { useAuth } from '../../contexts/AuthContext';
+import { UserRole } from '../../types';
 
 const NavigationBar: React.FC = () => {
   const { language, changeLanguage, t } = useLanguage();
+  const { user, logout, isAuthenticated } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const user = getCurrentUser();
-  const loggedIn = isAuthenticated();
 
   const handleLogout = () => {
-    logoutUser();
+    logout();
     navigate('/');
   };
 
-  const navItems = isOfficial()
+  const isOfficial = user?.type === UserRole.OFFICIAL;
+
+  const navItems = isOfficial
     ? [
       { name: 'Dashboard', path: '/official/dashboard' },
       { name: 'Analytics', path: '/official/analytics' },
+      // ... same as before
     ]
-    : loggedIn
+    : isAuthenticated
       ? [
         { name: 'Dashboard', path: '/' },
         { name: t('reportButton'), path: '/report' },

@@ -1,19 +1,20 @@
 
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  User as UserIcon, 
-  ShieldCheck, 
-  ArrowRight, 
-  Mail, 
+import {
+  User as UserIcon,
+  ShieldCheck,
+  ArrowRight,
+  Mail,
   Lock,
   Building
 } from 'lucide-react';
-import { loginUser } from '../utils/auth';
+import { useAuth } from '../contexts/AuthContext';
 import { UserRole } from '../types';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [activeTab, setActiveTab] = useState<'citizen' | 'official'>('citizen');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,16 +23,16 @@ const LoginPage: React.FC = () => {
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     if (activeTab === 'citizen') {
-      loginUser({ type: UserRole.CITIZEN, email });
+      login({ type: UserRole.CITIZEN, email });
       navigate('/'); // Go to intelligent root
     } else {
-      loginUser({ type: UserRole.OFFICIAL, email, department: dept });
+      login({ type: UserRole.OFFICIAL, email, department: dept });
       navigate('/official/dashboard');
     }
   };
 
   const handleGuest = () => {
-    loginUser({ type: UserRole.GUEST });
+    login({ type: UserRole.GUEST });
     navigate('/'); // Go to intelligent root
   };
 
@@ -46,20 +47,18 @@ const LoginPage: React.FC = () => {
         <div className="bg-white rounded-[40px] shadow-2xl shadow-emerald-900/5 border border-gray-100 overflow-hidden p-2">
           {/* Tabs */}
           <div className="flex bg-gray-50 p-1.5 rounded-[32px] mb-4">
-            <button 
+            <button
               onClick={() => setActiveTab('citizen')}
-              className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-[28px] font-bold transition-all ${
-                activeTab === 'citizen' ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-400 hover:text-gray-600'
-              }`}
+              className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-[28px] font-bold transition-all ${activeTab === 'citizen' ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-400 hover:text-gray-600'
+                }`}
             >
               <UserIcon className="w-4 h-4" />
               Citizen
             </button>
-            <button 
+            <button
               onClick={() => setActiveTab('official')}
-              className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-[28px] font-bold transition-all ${
-                activeTab === 'official' ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-400 hover:text-gray-600'
-              }`}
+              className={`flex-1 flex items-center justify-center gap-2 py-3.5 rounded-[28px] font-bold transition-all ${activeTab === 'official' ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-400 hover:text-gray-600'
+                }`}
             >
               <ShieldCheck className="w-4 h-4" />
               Official
@@ -70,10 +69,10 @@ const LoginPage: React.FC = () => {
             <div className="space-y-4">
               <div className="relative group">
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
-                <input 
-                  type="email" 
+                <input
+                  type="email"
                   required
-                  placeholder="Email Address" 
+                  placeholder="Email Address"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-transparent rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition-all text-gray-700"
@@ -81,10 +80,10 @@ const LoginPage: React.FC = () => {
               </div>
               <div className="relative group">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
-                <input 
-                  type="password" 
+                <input
+                  type="password"
                   required
-                  placeholder="Password" 
+                  placeholder="Password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-transparent rounded-2xl outline-none focus:ring-2 focus:ring-emerald-500 transition-all text-gray-700"
@@ -94,7 +93,7 @@ const LoginPage: React.FC = () => {
               {activeTab === 'official' && (
                 <div className="relative group">
                   <Building className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors" />
-                  <select 
+                  <select
                     required
                     value={dept}
                     onChange={(e) => setDept(e.target.value)}
@@ -109,7 +108,7 @@ const LoginPage: React.FC = () => {
               )}
             </div>
 
-            <button 
+            <button
               type="submit"
               className="w-full bg-emerald-600 text-white py-4 rounded-2xl font-bold text-lg hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-600/20 flex items-center justify-center gap-2"
             >
@@ -119,7 +118,7 @@ const LoginPage: React.FC = () => {
 
             {activeTab === 'citizen' && (
               <div className="pt-4 text-center">
-                <button 
+                <button
                   type="button"
                   onClick={handleGuest}
                   className="text-gray-500 font-bold hover:text-emerald-600 transition-colors underline underline-offset-4"
