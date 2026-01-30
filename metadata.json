@@ -1,0 +1,9 @@
+
+{
+  "name": "EcoGuard - Environmental Reporting Portal",
+  "description": "A comprehensive multi-language environmental reporting system powered by Gemini AI for automated routing and action planning.",
+  "requestFramePermissions": [
+    "camera",
+    "geolocation"
+  ]
+}
