@@ -13,12 +13,33 @@ import { useLanguage } from '../hooks/useLanguage';
 import { getComplaints } from '../utils/storage';
 import { Complaint, ComplaintStatus } from '../types';
 
+import { TranslationSet } from '../types';
+
 const CommunityReportsPage: React.FC = () => {
     const { t } = useLanguage();
     const [complaints, setComplaints] = useState<Complaint[]>([]);
     const [search, setSearch] = useState('');
     const [statusFilter, setStatusFilter] = useState('All');
     const [isLoading, setIsLoading] = useState(true);
+
+    // Helpers
+    const getTranslatedStatus = (status: ComplaintStatus) => {
+        switch (status) {
+            case ComplaintStatus.NEW: return t('statusNew');
+            case ComplaintStatus.IN_PROGRESS: return t('statusInProgress');
+            case ComplaintStatus.RESOLVED: return t('statusResolved');
+            default: return status;
+        }
+    };
+
+    const getTranslatedPriority = (priority: string) => {
+        switch (priority) {
+            case 'High': return t('priorityHigh');
+            case 'Medium': return t('priorityMedium');
+            case 'Low': return t('priorityLow');
+            default: return priority;
+        }
+    };
 
     useEffect(() => {
         const loadComplaints = async () => {
@@ -101,8 +122,8 @@ const CommunityReportsPage: React.FC = () => {
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60 z-10" />
                                     <img src={complaint.imageBase64} alt="Issue" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                                     <span className={`absolute bottom-3 right-3 z-20 text-[10px] font-bold px-2 py-1 rounded-full backdrop-blur-md ${complaint.status === ComplaintStatus.RESOLVED ? 'bg-emerald-500/90 text-white' :
-                                            complaint.status === ComplaintStatus.IN_PROGRESS ? 'bg-amber-500/90 text-white' :
-                                                'bg-blue-500/90 text-white'
+                                        complaint.status === ComplaintStatus.IN_PROGRESS ? 'bg-amber-500/90 text-white' :
+                                            'bg-blue-500/90 text-white'
                                         }`}>
                                         {complaint.status}
                                     </span>
@@ -117,7 +138,7 @@ const CommunityReportsPage: React.FC = () => {
                                             </span>
                                             {!complaint.imageBase64 && (
                                                 <span className={`text-[10px] font-bold px-2 py-1 rounded-full ${getStatusColor(complaint.status)}`}>
-                                                    {complaint.status}
+                                                    {getTranslatedStatus(complaint.status)}
                                                 </span>
                                             )}
                                         </div>
@@ -142,7 +163,7 @@ const CommunityReportsPage: React.FC = () => {
                                     <div className="flex flex-col">
                                         <span className="text-[10px] uppercase text-gray-400 font-bold tracking-wider mb-0.5">Priority</span>
                                         <span className={`text-xs font-black uppercase tracking-wide ${complaint.priority === 'High' ? 'text-red-500' : 'text-emerald-600'}`}>
-                                            {complaint.priority}
+                                            {getTranslatedPriority(complaint.priority)}
                                         </span>
                                     </div>
                                     <div className="flex items-center gap-1 bg-gray-50 px-3 py-1.5 rounded-full">

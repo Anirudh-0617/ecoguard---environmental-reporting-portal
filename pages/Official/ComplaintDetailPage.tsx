@@ -14,14 +14,50 @@ import {
 import { getComplaintById, updateComplaint } from '../../utils/storage';
 import { Complaint, ComplaintStatus } from '../../types';
 import { useLanguage } from '../../hooks/useLanguage';
+import { TranslationSet } from '../../types';
 
 const ComplaintDetailPage: React.FC = () => {
   const { t } = useLanguage();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [complaint, setComplaint] = useState<Complaint | null>(null);
+  const [loading, setLoading] = useState(true);
   const [newStatus, setNewStatus] = useState<ComplaintStatus>(ComplaintStatus.NEW);
   const [isUpdating, setIsUpdating] = useState(false);
+
+  // Helper to get translated status
+  const getTranslatedStatus = (status: ComplaintStatus) => {
+    switch (status) {
+      case ComplaintStatus.NEW: return t('statusNew');
+      case ComplaintStatus.IN_PROGRESS: return t('statusInProgress');
+      case ComplaintStatus.RESOLVED: return t('statusResolved');
+      default: return status;
+    }
+  };
+
+  // Helper to map DB priority to translation key
+  const getTranslatedPriority = (priority: string) => {
+    switch (priority) {
+      case 'High': return t('priorityHigh');
+      case 'Medium': return t('priorityMedium');
+      case 'Low': return t('priorityLow');
+      default: return priority;
+    }
+  };
+
+  const getTranslatedCategory = (category: string) => {
+    // Map category strings to translation keys
+    const map: Record<string, keyof TranslationSet> = {
+      "Solid Waste Management": "catSolidWaste",
+      "Water Pollution": "catWaterPollution",
+      "Air Quality Issues": "catAirQuality",
+      "Sewage Leakage": "catSewage",
+      "Illegal Dumping": "catIllegalDumping",
+      "Tree Cutting": "catTreeCutting",
+      "Noise Pollution": "catNoisePollution"
+    };
+    return map[category] ? t(map[category]) : category;
+  };
 
   useEffect(() => {
     const loadComplaint = async () => {

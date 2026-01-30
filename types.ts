@@ -107,4 +107,14 @@ export interface TranslationSet {
   updateStatus: string;
   confirmUpdate: string;
   currentProgress: string;
+  priorityHigh: string;
+  priorityMedium: string;
+  priorityLow: string;
+  catSolidWaste: string;
+  catWaterPollution: string;
+  catAirQuality: string;
+  catSewage: string;
+  catIllegalDumping: string;
+  catTreeCutting: string;
+  catNoisePollution: string;
 }

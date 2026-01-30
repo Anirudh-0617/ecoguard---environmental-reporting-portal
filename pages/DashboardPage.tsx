@@ -23,6 +23,8 @@ import { searchNearbyServices, MapsResult } from '../services/geminiService';
 import { getComplaints } from '../utils/storage';
 import { Complaint, ComplaintStatus } from '../types';
 
+import { TranslationSet } from '../types';
+
 const DashboardPage: React.FC = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
@@ -31,6 +33,29 @@ const DashboardPage: React.FC = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [recentComplaints, setRecentComplaints] = useState<Complaint[]>([]);
   const [stats, setStats] = useState({ total: 0, resolved: 0, active: 0 });
+
+  // Helpers
+  const getTranslatedStatus = (status: ComplaintStatus) => {
+    switch (status) {
+      case ComplaintStatus.NEW: return t('statusNew');
+      case ComplaintStatus.IN_PROGRESS: return t('statusInProgress');
+      case ComplaintStatus.RESOLVED: return t('statusResolved');
+      default: return status;
+    }
+  };
+
+  const getTranslatedCategory = (category: string) => {
+    const map: Record<string, keyof TranslationSet> = {
+      "Solid Waste Management": "catSolidWaste",
+      "Water Pollution": "catWaterPollution",
+      "Air Quality Issues": "catAirQuality",
+      "Sewage Leakage": "catSewage",
+      "Illegal Dumping": "catIllegalDumping",
+      "Tree Cutting": "catTreeCutting",
+      "Noise Pollution": "catNoisePollution"
+    };
+    return map[category] ? t(map[category]) : category;
+  };
 
   const TIPS = [
     "Recycling just one aluminum can saves enough energy to run a TV for three hours.",
@@ -175,7 +200,7 @@ const DashboardPage: React.FC = () => {
                     <div className="flex justify-between items-start mb-4">
                       <span className={`text-[10px] font-black uppercase px-2 py-1 rounded-lg ${complaint.status === ComplaintStatus.RESOLVED ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'
                         }`}>
-                        {complaint.status}
+                        {getTranslatedStatus(complaint.status)}
                       </span>
                       <span className="text-[10px] font-mono text-gray-400">#{complaint.id.split('-').pop()}</span>
                     </div>
@@ -187,7 +212,7 @@ const DashboardPage: React.FC = () => {
                       <span className="truncate">{complaint.location.address}</span>
                     </div>
                     <div className="flex items-center justify-between pt-4 border-t border-gray-50">
-                      <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{complaint.category}</span>
+                      <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{getTranslatedCategory(complaint.category)}</span>
                       <button className="text-emerald-400 group-hover:translate-x-1 transition-transform group-hover:text-emerald-600">
                         <ArrowRight className="w-4 h-4" />
                       </button>
