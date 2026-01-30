@@ -32,6 +32,16 @@ const DashboardPage: React.FC = () => {
   const [recentComplaints, setRecentComplaints] = useState<Complaint[]>([]);
   const [stats, setStats] = useState({ total: 0, resolved: 0, active: 0 });
 
+  const TIPS = [
+    "Recycling just one aluminum can saves enough energy to run a TV for three hours.",
+    "Composting organic waste can reduce household garbage by up to 30%.",
+    "Switching to LED bulbs uses 75% less energy than incandescent lighting.",
+    "Fixing a leaky faucet can save over 3,000 gallons of water per year.",
+    "Planting a single tree can absorb up to 48 pounds of CO2 per year."
+  ];
+
+  const [currentTip, setCurrentTip] = useState(TIPS[0]);
+
   useEffect(() => {
     const loadComplaints = async () => {
       try {
@@ -69,6 +79,12 @@ const DashboardPage: React.FC = () => {
     });
   };
 
+  const showNextTip = () => {
+    const currentIndex = TIPS.indexOf(currentTip);
+    const nextIndex = (currentIndex + 1) % TIPS.length;
+    setCurrentTip(TIPS[nextIndex]);
+  };
+
   return (
     <div className="w-full bg-gray-50 pb-20">
       {/* Header Dashboard Banner */}
@@ -77,10 +93,10 @@ const DashboardPage: React.FC = () => {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div>
               <h1 className="text-3xl md:text-4xl font-black text-white mb-2">
-                Community Health Dashboard
+                {t('dashboardTitle')}
               </h1>
               <p className="text-emerald-100/80 font-medium">
-                Real-time environmental monitoring and reporting for your neighborhood.
+                {t('dashboardSubtitle')}
               </p>
             </div>
             <div className="flex gap-3">
@@ -89,7 +105,7 @@ const DashboardPage: React.FC = () => {
                 className="bg-emerald-400 text-emerald-950 px-6 py-3 rounded-2xl font-bold hover:bg-emerald-300 transition-all flex items-center gap-2 shadow-lg shadow-emerald-400/20"
               >
                 <PlusCircle className="w-5 h-5" />
-                Report New Issue
+                {t('reportButton')}
               </button>
             </div>
           </div>
@@ -105,7 +121,7 @@ const DashboardPage: React.FC = () => {
             </div>
             <div>
               <div className="text-3xl font-black text-gray-900">{stats.total}</div>
-              <div className="text-sm font-bold text-gray-400 uppercase tracking-wider">Total Reports</div>
+              <div className="text-sm font-bold text-gray-400 uppercase tracking-wider">{t('totalReports')}</div>
             </div>
           </div>
           <div className="bg-white p-6 rounded-[32px] shadow-xl shadow-emerald-900/5 border border-white flex items-center gap-6">
@@ -114,7 +130,7 @@ const DashboardPage: React.FC = () => {
             </div>
             <div>
               <div className="text-3xl font-black text-gray-900">{stats.active}</div>
-              <div className="text-sm font-bold text-gray-400 uppercase tracking-wider">Active Issues</div>
+              <div className="text-sm font-bold text-gray-400 uppercase tracking-wider">{t('activeIssues')}</div>
             </div>
           </div>
           <div className="bg-white p-6 rounded-[32px] shadow-xl shadow-emerald-900/5 border border-white flex items-center gap-6">
@@ -123,7 +139,7 @@ const DashboardPage: React.FC = () => {
             </div>
             <div>
               <div className="text-3xl font-black text-gray-900">{stats.resolved}</div>
-              <div className="text-sm font-bold text-gray-400 uppercase tracking-wider">Resolved</div>
+              <div className="text-sm font-bold text-gray-400 uppercase tracking-wider">{t('resolved')}</div>
             </div>
           </div>
         </div>
@@ -137,20 +153,20 @@ const DashboardPage: React.FC = () => {
             <div className="flex items-center justify-between mb-2">
               <h2 className="text-xl font-black text-gray-900 flex items-center gap-2">
                 <Clock className="w-5 h-5 text-emerald-600" />
-                Recent Community Reports
+                {t('recentReports')}
               </h2>
               <button
                 onClick={() => navigate('/community')}
                 className="text-emerald-600 font-bold text-sm hover:underline"
               >
-                View All
+                {t('viewAll')}
               </button>
             </div>
 
             {recentComplaints.length === 0 ? (
               <div className="bg-white rounded-[32px] p-12 text-center border border-gray-100 border-dashed">
                 <AlertCircle className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-500 font-medium">No recent activity found. Be the first to report!</p>
+                <p className="text-gray-500 font-medium">{t('noComplaints')}</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -184,9 +200,9 @@ const DashboardPage: React.FC = () => {
               <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
                 <Cpu className="w-32 h-32" />
               </div>
-              <h3 className="text-2xl font-black mb-4">Powered by Gemini AI</h3>
+              <h3 className="text-2xl font-black mb-4">{t('poweredBy')}</h3>
               <p className="text-emerald-50/80 mb-6 max-w-lg leading-relaxed">
-                Our platform uses advanced multimodal AI to analyze photos, categorize pollution types, and generate step-by-step action plans for city officials within seconds of submission.
+                {t('aiDesc')}
               </p>
               <div className="flex flex-wrap gap-4">
                 <div className="bg-white/10 px-4 py-2 rounded-xl text-sm font-bold backdrop-blur-md flex items-center gap-2">
@@ -208,7 +224,7 @@ const DashboardPage: React.FC = () => {
             <div className="bg-white rounded-[40px] p-8 shadow-sm border border-gray-100">
               <h3 className="text-xl font-black text-gray-900 mb-2 flex items-center gap-2">
                 <MapPin className="w-5 h-5 text-emerald-600" />
-                Nearby Services
+                {t('nearbyServices')}
               </h3>
               <p className="text-gray-500 text-sm mb-6">Find local recycling and waste centers instantly.</p>
 
@@ -219,7 +235,7 @@ const DashboardPage: React.FC = () => {
                   className="w-full flex items-center gap-3 bg-gray-50 p-4 rounded-2xl font-bold text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-all border border-transparent"
                 >
                   <Recycle className="w-5 h-5" />
-                  Recycling Hubs
+                  {t('recyclingHubs')}
                 </button>
                 <button
                   onClick={() => handleSearchNearby("Waste management offices near me")}
@@ -227,7 +243,7 @@ const DashboardPage: React.FC = () => {
                   className="w-full flex items-center gap-3 bg-gray-50 p-4 rounded-2xl font-bold text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-all border border-transparent"
                 >
                   <ShieldCheck className="w-5 h-5" />
-                  Env. Authorities
+                  {t('envAuthorities')}
                 </button>
               </div>
 
@@ -256,14 +272,17 @@ const DashboardPage: React.FC = () => {
 
             {/* Quick Tips */}
             <div className="bg-white rounded-[40px] p-8 shadow-sm border border-gray-100">
-              <h3 className="text-xl font-black text-gray-900 mb-4">Did you know?</h3>
-              <div className="bg-emerald-50 p-6 rounded-3xl">
+              <h3 className="text-xl font-black text-gray-900 mb-4">{t('didYouKnow')}</h3>
+              <div className="bg-emerald-50 p-6 rounded-3xl min-h-[120px] flex items-center">
                 <p className="text-sm text-emerald-800 leading-relaxed italic">
-                  "Recycling just one aluminum can saves enough energy to run a TV for three hours."
+                  "{currentTip}"
                 </p>
               </div>
-              <button className="w-full mt-6 py-3 border border-emerald-100 text-emerald-600 font-bold rounded-2xl hover:bg-emerald-50 transition-all text-sm">
-                Learn More Tips
+              <button
+                onClick={showNextTip}
+                className="w-full mt-6 py-3 border border-emerald-100 text-emerald-600 font-bold rounded-2xl hover:bg-emerald-50 transition-all text-sm"
+              >
+                {t('learnMoreTips')}
               </button>
             </div>
           </div>

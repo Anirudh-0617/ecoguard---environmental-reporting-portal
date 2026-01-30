@@ -88,4 +88,23 @@ export interface TranslationSet {
   feature3Desc: string;
   feature4Title: string;
   feature4Desc: string;
+  dashboardTitle: string;
+  dashboardSubtitle: string;
+  totalReports: string;
+  activeIssues: string;
+  resolved: string;
+  recentReports: string;
+  viewAll: string;
+  nearbyServices: string;
+  recyclingHubs: string;
+  envAuthorities: string;
+  didYouKnow: string;
+  learnMoreTips: string;
+  poweredBy: string;
+  aiDesc: string;
+  assignTeam: string;
+  escalateReport: string;
+  updateStatus: string;
+  confirmUpdate: string;
+  currentProgress: string;
 }

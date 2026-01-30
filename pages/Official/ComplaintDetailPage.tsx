@@ -13,8 +13,10 @@ import {
 } from 'lucide-react';
 import { getComplaintById, updateComplaint } from '../../utils/storage';
 import { Complaint, ComplaintStatus } from '../../types';
+import { useLanguage } from '../../hooks/useLanguage';
 
 const ComplaintDetailPage: React.FC = () => {
+  const { t } = useLanguage();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [complaint, setComplaint] = useState<Complaint | null>(null);
@@ -79,8 +81,8 @@ const ComplaintDetailPage: React.FC = () => {
                 </div>
               </div>
               <span className={`px-4 py-1.5 rounded-full font-bold text-xs ${complaint.status === ComplaintStatus.NEW ? 'bg-blue-100 text-blue-700' :
-                  complaint.status === ComplaintStatus.IN_PROGRESS ? 'bg-amber-100 text-amber-700' :
-                    'bg-emerald-100 text-emerald-700'
+                complaint.status === ComplaintStatus.IN_PROGRESS ? 'bg-amber-100 text-amber-700' :
+                  'bg-emerald-100 text-emerald-700'
                 }`}>
                 {complaint.status}
               </span>
@@ -153,10 +155,10 @@ const ComplaintDetailPage: React.FC = () => {
 
           {/* Admin Controls */}
           <div className="bg-white rounded-3xl border border-gray-100 shadow-sm p-8">
-            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">Update Status</h3>
+            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-6">{t('updateStatus')}</h3>
             <div className="space-y-6">
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-bold text-gray-700">Current Progress</label>
+                <label className="text-sm font-bold text-gray-700">{t('currentProgress')}</label>
                 <select
                   value={newStatus}
                   onChange={(e) => setNewStatus(e.target.value as ComplaintStatus)}
@@ -174,17 +176,23 @@ const ComplaintDetailPage: React.FC = () => {
                 className="w-full bg-emerald-600 text-white font-bold py-3 rounded-xl hover:bg-emerald-700 transition-all flex items-center justify-center gap-2"
               >
                 {isUpdating ? <Clock className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
-                Confirm Status Update
+                {t('confirmUpdate')}
               </button>
 
               <div className="pt-6 border-t border-gray-50 space-y-3">
-                <button className="w-full bg-gray-100 text-gray-700 font-bold py-3 rounded-xl hover:bg-gray-200 transition-all text-sm flex items-center justify-center gap-2">
+                <button
+                  onClick={() => alert("Team assigned successfully! Notification sent to: Sanitation Department.")}
+                  className="w-full bg-gray-100 text-gray-700 font-bold py-3 rounded-xl hover:bg-gray-200 transition-all text-sm flex items-center justify-center gap-2"
+                >
                   <UserCheck className="w-4 h-4" />
-                  Assign Team
+                  {t('assignTeam')}
                 </button>
-                <button className="w-full border border-red-200 text-red-600 font-bold py-3 rounded-xl hover:bg-red-50 transition-all text-sm flex items-center justify-center gap-2">
+                <button
+                  onClick={() => alert("Report escalated to High Priority. Zonal Commissioner notified.")}
+                  className="w-full border border-red-200 text-red-600 font-bold py-3 rounded-xl hover:bg-red-50 transition-all text-sm flex items-center justify-center gap-2"
+                >
                   <AlertTriangle className="w-4 h-4" />
-                  Escalate Report
+                  {t('escalateReport')}
                 </button>
               </div>
             </div>
