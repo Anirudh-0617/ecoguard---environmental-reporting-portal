@@ -45,11 +45,15 @@ const NavigationBar: React.FC = () => {
     <nav className="bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex items-center">
+          <div className="flex items-center gap-4">
             <Link to="/" className="flex-shrink-0 flex items-center gap-2 text-emerald-600 font-bold text-xl">
               <Leaf className="w-8 h-8" />
               <span>EcoGuard</span>
             </Link>
+            <div className="hidden lg:flex items-center gap-1.5 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-100">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-widest">Powered by Gemini AI</span>
+            </div>
           </div>
 
           {/* Desktop */}
@@ -59,8 +63,8 @@ const NavigationBar: React.FC = () => {
                 key={item.path}
                 to={item.path}
                 className={`${isActive(item.path)
-                    ? 'text-emerald-600 border-b-2 border-emerald-600'
-                    : 'text-gray-600 hover:text-emerald-500'
+                  ? 'text-emerald-600 border-b-2 border-emerald-600'
+                  : 'text-gray-600 hover:text-emerald-500'
                   } px-1 py-2 text-sm font-medium transition-colors`}
               >
                 {item.name}
