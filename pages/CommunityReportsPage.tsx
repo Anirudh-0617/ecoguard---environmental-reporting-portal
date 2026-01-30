@@ -95,47 +95,60 @@ const CommunityReportsPage: React.FC = () => {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filtered.map(complaint => (
-                        <div key={complaint.id} className="bg-white rounded-3xl border border-gray-100 shadow-sm hover:shadow-md transition-all overflow-hidden group">
+                        <div key={complaint.id} className="bg-white rounded-3xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden group cursor-pointer">
                             {complaint.imageBase64 && (
-                                <div className="h-40 overflow-hidden">
-                                    <img src={complaint.imageBase64} alt="Issue" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                                <div className="h-48 overflow-hidden relative">
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-60 z-10" />
+                                    <img src={complaint.imageBase64} alt="Issue" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                                    <span className={`absolute bottom-3 right-3 z-20 text-[10px] font-bold px-2 py-1 rounded-full backdrop-blur-md ${complaint.status === ComplaintStatus.RESOLVED ? 'bg-emerald-500/90 text-white' :
+                                            complaint.status === ComplaintStatus.IN_PROGRESS ? 'bg-amber-500/90 text-white' :
+                                                'bg-blue-500/90 text-white'
+                                        }`}>
+                                        {complaint.status}
+                                    </span>
                                 </div>
                             )}
                             <div className="p-6">
                                 <div className="flex justify-between items-start mb-4">
-                                    <div>
-                                        <span className="text-xs font-mono font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded mb-2 inline-block">
-                                            {complaint.id}
-                                        </span>
-                                        <h3 className="font-bold text-gray-900 line-clamp-1">{complaint.description}</h3>
+                                    <div className="w-full">
+                                        <div className="flex justify-between items-center mb-2">
+                                            <span className="text-[10px] font-mono font-bold text-gray-400 bg-gray-50 px-2 py-1 rounded-lg">
+                                                #{complaint.id.split('-').pop()}
+                                            </span>
+                                            {!complaint.imageBase64 && (
+                                                <span className={`text-[10px] font-bold px-2 py-1 rounded-full ${getStatusColor(complaint.status)}`}>
+                                                    {complaint.status}
+                                                </span>
+                                            )}
+                                        </div>
+                                        <h3 className="font-bold text-gray-900 text-lg leading-snug line-clamp-2 capitalize mb-1 group-hover:text-emerald-700 transition-colors">
+                                            {complaint.description}
+                                        </h3>
                                     </div>
-                                    <span className={`text-xs font-bold px-2 py-1 rounded-full ${getStatusColor(complaint.status)}`}>
-                                        {complaint.status}
-                                    </span>
                                 </div>
 
-                                <div className="space-y-2 mb-6">
-                                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                                        <MapPin className="w-3.5 h-3.5" />
-                                        <span className="truncate">{complaint.location.address}</span>
+                                <div className="space-y-3 mb-6">
+                                    <div className="flex items-center gap-2.5 text-xs text-gray-500 bg-gray-50 p-2.5 rounded-xl">
+                                        <MapPin className="w-3.5 h-3.5 text-emerald-500 flex-shrink-0" />
+                                        <span className="truncate font-medium">{complaint.location.address}</span>
                                     </div>
-                                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                                        <Clock className="w-3.5 h-3.5" />
-                                        <span>{new Date(complaint.createdAt).toLocaleDateString()}</span>
+                                    <div className="flex items-center gap-2.5 text-xs text-gray-500 px-2">
+                                        <Clock className="w-3.5 h-3.5 text-gray-400" />
+                                        <span>Reported on {new Date(complaint.createdAt).toLocaleDateString()}</span>
                                     </div>
                                 </div>
 
                                 <div className="flex items-center justify-between pt-4 border-t border-gray-50">
                                     <div className="flex flex-col">
-                                        <span className="text-[10px] uppercase text-gray-400 font-bold tracking-wider">Priority</span>
-                                        <span className={`text-xs font-bold ${complaint.priority === 'High' ? 'text-red-500' : 'text-emerald-500'}`}>
+                                        <span className="text-[10px] uppercase text-gray-400 font-bold tracking-wider mb-0.5">Priority</span>
+                                        <span className={`text-xs font-black uppercase tracking-wide ${complaint.priority === 'High' ? 'text-red-500' : 'text-emerald-600'}`}>
                                             {complaint.priority}
                                         </span>
                                     </div>
-                                    <div className="flex items-center gap-1">
-                                        {complaint.rating && [...Array(5)].map((_, i) => (
-                                            <Star key={i} className={`w-3 h-3 ${i < complaint.rating! ? 'fill-emerald-500 text-emerald-500' : 'text-gray-200'}`} />
-                                        ))}
+                                    <div className="flex items-center gap-1 bg-gray-50 px-3 py-1.5 rounded-full">
+                                        {complaint.rating ? [...Array(5)].map((_, i) => (
+                                            <Star key={i} className={`w-3 h-3 ${i < complaint.rating! ? 'fill-amber-400 text-amber-400' : 'text-gray-200'}`} />
+                                        )) : <span className="text-[10px] font-bold text-gray-400">Not Rated</span>}
                                     </div>
                                 </div>
                             </div>

@@ -16,6 +16,7 @@ import Footer from './components/Shared/Footer';
 import ProtectedRoute from './components/Shared/ProtectedRoute';
 import { UserRole } from './types';
 import { isAuthenticated, isOfficial } from './utils/auth';
+import { LanguageProvider } from './context/LanguageContext';
 
 const RootRoute: React.FC = () => {
   if (isOfficial()) {
@@ -29,68 +30,70 @@ const RootRoute: React.FC = () => {
 
 const App: React.FC = () => {
   return (
-    <Router>
-      <div className="min-h-screen flex flex-col bg-gray-50">
-        <NavigationBar />
-        <main className="flex-grow">
-          <Routes>
-            {/* Intelligent Root Route */}
-            <Route path="/" element={<RootRoute />} />
+    <LanguageProvider>
+      <Router>
+        <div className="min-h-screen flex flex-col bg-gray-50">
+          <NavigationBar />
+          <main className="flex-grow">
+            <Routes>
+              {/* Intelligent Root Route */}
+              <Route path="/" element={<RootRoute />} />
 
-            {/* Public */}
-            <Route path="/login" element={<LoginPage />} />
+              {/* Public */}
+              <Route path="/login" element={<LoginPage />} />
 
-            {/* Secure Portal */}
-            <Route path="/dashboard" element={
-              <ProtectedRoute allowedRoles={[UserRole.CITIZEN, UserRole.GUEST, UserRole.OFFICIAL]}>
-                <DashboardPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/report" element={
-              <ProtectedRoute allowedRoles={[UserRole.CITIZEN, UserRole.GUEST, UserRole.OFFICIAL]}>
-                <ReportIssuePage />
-              </ProtectedRoute>
-            } />
-            <Route path="/track" element={
-              <ProtectedRoute allowedRoles={[UserRole.CITIZEN, UserRole.GUEST, UserRole.OFFICIAL]}>
-                <TrackComplaintsPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/community" element={
-              <ProtectedRoute allowedRoles={[UserRole.CITIZEN, UserRole.GUEST, UserRole.OFFICIAL]}>
-                <CommunityReportsPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/resources" element={
-              <ProtectedRoute allowedRoles={[UserRole.CITIZEN, UserRole.GUEST, UserRole.OFFICIAL]}>
-                <ResourcesPage />
-              </ProtectedRoute>
-            } />
+              {/* Secure Portal */}
+              <Route path="/dashboard" element={
+                <ProtectedRoute allowedRoles={[UserRole.CITIZEN, UserRole.GUEST, UserRole.OFFICIAL]}>
+                  <DashboardPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/report" element={
+                <ProtectedRoute allowedRoles={[UserRole.CITIZEN, UserRole.GUEST, UserRole.OFFICIAL]}>
+                  <ReportIssuePage />
+                </ProtectedRoute>
+              } />
+              <Route path="/track" element={
+                <ProtectedRoute allowedRoles={[UserRole.CITIZEN, UserRole.GUEST, UserRole.OFFICIAL]}>
+                  <TrackComplaintsPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/community" element={
+                <ProtectedRoute allowedRoles={[UserRole.CITIZEN, UserRole.GUEST, UserRole.OFFICIAL]}>
+                  <CommunityReportsPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/resources" element={
+                <ProtectedRoute allowedRoles={[UserRole.CITIZEN, UserRole.GUEST, UserRole.OFFICIAL]}>
+                  <ResourcesPage />
+                </ProtectedRoute>
+              } />
 
-            {/* Official */}
-            <Route path="/official/dashboard" element={
-              <ProtectedRoute allowedRoles={[UserRole.OFFICIAL]}>
-                <OfficialDashboardPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/official/complaint/:id" element={
-              <ProtectedRoute allowedRoles={[UserRole.OFFICIAL]}>
-                <ComplaintDetailPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/official/analytics" element={
-              <ProtectedRoute allowedRoles={[UserRole.OFFICIAL]}>
-                <AnalyticsPage />
-              </ProtectedRoute>
-            } />
+              {/* Official */}
+              <Route path="/official/dashboard" element={
+                <ProtectedRoute allowedRoles={[UserRole.OFFICIAL]}>
+                  <OfficialDashboardPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/official/complaint/:id" element={
+                <ProtectedRoute allowedRoles={[UserRole.OFFICIAL]}>
+                  <ComplaintDetailPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/official/analytics" element={
+                <ProtectedRoute allowedRoles={[UserRole.OFFICIAL]}>
+                  <AnalyticsPage />
+                </ProtectedRoute>
+              } />
 
-            {/* Fallback */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </Router>
+              {/* Fallback */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </Router>
+    </LanguageProvider>
   );
 };
 

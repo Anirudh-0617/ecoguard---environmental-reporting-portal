@@ -90,24 +90,26 @@ const ComplaintDetailPage: React.FC = () => {
 
             <div className="p-8">
               <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Description</h3>
-              <p className="text-gray-800 leading-relaxed text-lg mb-8">
+              <p className="text-gray-800 leading-relaxed text-lg mb-8 capitalize">
                 {complaint.description}
               </p>
 
               {complaint.imageBase64 && (
-                <div className="mb-8 rounded-2xl overflow-hidden border border-gray-100">
-                  <img src={complaint.imageBase64} alt="Reported Scene" className="w-full object-cover max-h-[400px]" />
+                <div className="mb-8 rounded-2xl overflow-hidden border border-gray-100 shadow-sm relative group">
+                  <img src={complaint.imageBase64} alt="Reported Scene" className="w-full object-cover max-h-[400px] transform group-hover:scale-105 transition-transform duration-700" />
                 </div>
               )}
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-gray-50">
                 <div>
                   <h3 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Location</h3>
-                  <div className="flex gap-3 bg-gray-50 p-4 rounded-2xl border border-gray-100">
-                    <MapPin className="w-5 h-5 text-emerald-500 flex-shrink-0" />
+                  <div className="flex gap-3 bg-gray-50 p-4 rounded-2xl border border-gray-100 hover:border-emerald-200 transition-colors">
+                    <div className="p-2 bg-white rounded-lg shadow-sm text-emerald-500">
+                      <MapPin className="w-5 h-5 flex-shrink-0" />
+                    </div>
                     <div>
                       <p className="font-bold text-gray-900 text-sm mb-1">{complaint.location.address}</p>
-                      <p className="text-[10px] text-gray-500 uppercase font-mono">{complaint.location.lat}, {complaint.location.lng}</p>
+                      <p className="text-[10px] text-gray-500 uppercase font-mono tracking-wider">{complaint.location.lat.toFixed(4)}, {complaint.location.lng.toFixed(4)}</p>
                     </div>
                   </div>
                 </div>

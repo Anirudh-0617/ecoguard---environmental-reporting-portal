@@ -171,7 +171,7 @@ const DashboardPage: React.FC = () => {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {recentComplaints.map(complaint => (
-                  <div key={complaint.id} className="bg-white rounded-[32px] p-6 shadow-sm border border-gray-100 hover:shadow-md transition-all group">
+                  <div key={complaint.id} className="bg-white rounded-[32px] p-6 shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group cursor-pointer">
                     <div className="flex justify-between items-start mb-4">
                       <span className={`text-[10px] font-black uppercase px-2 py-1 rounded-lg ${complaint.status === ComplaintStatus.RESOLVED ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'
                         }`}>
@@ -179,14 +179,16 @@ const DashboardPage: React.FC = () => {
                       </span>
                       <span className="text-[10px] font-mono text-gray-400">#{complaint.id.split('-').pop()}</span>
                     </div>
-                    <h3 className="font-bold text-gray-900 mb-2 line-clamp-1">{complaint.description}</h3>
-                    <div className="flex items-center gap-2 text-xs text-gray-400 mb-4">
-                      <MapPin className="w-3 h-3" />
+                    <h3 className="font-bold text-gray-900 mb-2 line-clamp-1 capitalize group-hover:text-emerald-700 transition-colors">
+                      {complaint.description}
+                    </h3>
+                    <div className="flex items-center gap-2 text-xs text-gray-400 mb-4 bg-gray-50 p-2 rounded-lg">
+                      <MapPin className="w-3 h-3 text-emerald-500" />
                       <span className="truncate">{complaint.location.address}</span>
                     </div>
                     <div className="flex items-center justify-between pt-4 border-t border-gray-50">
-                      <span className="text-[10px] font-bold text-gray-500 uppercase">{complaint.category}</span>
-                      <button className="text-emerald-600 group-hover:translate-x-1 transition-transform">
+                      <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{complaint.category}</span>
+                      <button className="text-emerald-400 group-hover:translate-x-1 transition-transform group-hover:text-emerald-600">
                         <ArrowRight className="w-4 h-4" />
                       </button>
                     </div>
