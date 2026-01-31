@@ -28,6 +28,9 @@ import {
 import { getComplaints } from '../../utils/storage';
 import { Complaint, ComplaintStatus } from '../../types';
 
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
+
 const AnalyticsPage: React.FC = () => {
   const navigate = useNavigate();
   const [data, setData] = useState<Complaint[]>([]);
@@ -73,6 +76,80 @@ const AnalyticsPage: React.FC = () => {
   const totalOpen = total - resolved;
   const healthStatus = resolutionRate > 50 ? 'Good' : 'Needs Attention';
 
+  const handleExportCSV = () => {
+    if (data.length === 0) return;
+
+    const headers = ['ID', 'Date', 'Category', 'Priority', 'Status', 'Department', 'Description', 'Address', 'Resolution Date'];
+    const rows = data.map(c => [
+      c.id,
+      new Date(c.createdAt).toLocaleDateString(),
+      c.category,
+      c.priority,
+      c.status,
+      c.department || 'Unassigned',
+      `"${c.description.replace(/"/g, '""')}"`,
+      `"${c.location.address.replace(/"/g, '""')}"`,
+      c.resolvedAt ? new Date(c.resolvedAt).toLocaleDateString() : 'N/A'
+    ]);
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `ecoguard_report_${new Date().toISOString().split('T')[0]}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  };
+
+  const handleExportPDF = () => {
+    const doc = new jsPDF();
+
+    // Header
+    doc.setFillColor(16, 185, 129); // Emerald 500
+    doc.rect(0, 0, 210, 20, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(16);
+    doc.text("EcoGuard Official Report", 14, 13);
+
+    // Meta info
+    doc.setTextColor(50, 50, 50);
+    doc.setFontSize(10);
+    doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 30);
+    doc.text(`Total Records: ${total}`, 14, 35);
+    doc.text(`Resolution Rate: ${resolutionRate}%`, 14, 40);
+
+    // Table
+    const tableColumn = ["ID", "Category", "Priority", "Status", "Department", "Date"];
+    const tableRows = data.map(c => [
+      c.id.split('-').pop(),
+      c.category,
+      c.priority,
+      c.status,
+      c.department || 'Unassigned',
+      new Date(c.createdAt).toLocaleDateString()
+    ]);
+
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 45,
+      theme: 'grid',
+      styles: { fontSize: 8, cellPadding: 2 },
+      headStyles: { fillColor: [16, 185, 129], textColor: 255, fontStyle: 'bold' },
+      alternateRowStyles: { fillColor: [236, 253, 245] } // emerald-50
+    });
+
+    doc.save(`ecoguard_report_${new Date().toISOString().split('T')[0]}.pdf`);
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-10">
@@ -84,11 +161,17 @@ const AnalyticsPage: React.FC = () => {
           Back to Dashboard
         </button>
         <div className="flex gap-4">
-          <button className="flex items-center gap-2 bg-white border border-gray-200 px-4 py-2 rounded-xl text-sm font-bold text-gray-600 hover:bg-gray-50">
-            <Calendar className="w-4 h-4" />
-            Last 30 Days
+          <button
+            onClick={handleExportPDF}
+            className="flex items-center gap-2 bg-white border border-gray-200 px-4 py-2 rounded-xl text-sm font-bold text-gray-600 hover:bg-gray-50 transition-all hover:text-red-600 hover:border-red-100"
+          >
+            <Download className="w-4 h-4" />
+            Download PDF
           </button>
-          <button className="flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-emerald-700">
+          <button
+            onClick={handleExportCSV}
+            className="flex items-center gap-2 bg-emerald-600 text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-600/20"
+          >
             <Download className="w-4 h-4" />
             Export CSV
           </button>
