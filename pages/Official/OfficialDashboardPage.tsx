@@ -54,13 +54,33 @@ const OfficialDashboardPage: React.FC = () => {
           <h1 className="text-3xl font-bold text-gray-900">Official Dashboard</h1>
           <p className="text-gray-500">Managing city-wide environmental complaints and field reports.</p>
         </div>
-        <button
-          onClick={() => navigate('/official/analytics')}
-          className="bg-emerald-600 text-white px-5 py-2.5 rounded-xl font-bold hover:bg-emerald-700 transition-all flex items-center gap-2"
-        >
-          <BarChart3 className="w-4 h-4" />
-          View Analytics
-        </button>
+        <div className="flex gap-4">
+          <button
+            onClick={async () => {
+              if (window.confirm('⚠️ ARE YOU SURE? This will DELETE ALL DATA for the demo. This cannot be undone.')) {
+                try {
+                  const { deleteAllComplaints } = await import('../../services/supabaseService');
+                  await deleteAllComplaints();
+                  window.location.reload();
+                } catch (e: any) {
+                  console.error(e);
+                  alert(`Failed to delete data. \n\nError: ${e.message || 'Unknown error'}\n\nPOSSIBLE FIX: You likely need to run the "demo_cleanup.sql" script in your Supabase SQL Editor to allow deletions.`);
+                }
+              }
+            }}
+            className="bg-red-50 text-red-600 px-5 py-2.5 rounded-xl font-bold hover:bg-red-100 transition-all flex items-center gap-2 border border-red-100"
+          >
+            <AlertCircle className="w-4 h-4" />
+            Reset Demo Data
+          </button>
+          <button
+            onClick={() => navigate('/official/analytics')}
+            className="bg-emerald-600 text-white px-5 py-2.5 rounded-xl font-bold hover:bg-emerald-700 transition-all flex items-center gap-2 shadow-lg shadow-emerald-600/20"
+          >
+            <BarChart3 className="w-4 h-4" />
+            View Analytics
+          </button>
+        </div>
       </div>
 
       {/* Stats Grid */}
@@ -141,8 +161,8 @@ const OfficialDashboardPage: React.FC = () => {
                   </td>
                   <td className="px-6 py-4">
                     <span className={`text-xs font-bold px-2 py-1 rounded-full ${complaint.status === ComplaintStatus.NEW ? 'bg-blue-100 text-blue-700' :
-                        complaint.status === ComplaintStatus.IN_PROGRESS ? 'bg-amber-100 text-amber-700' :
-                          'bg-emerald-100 text-emerald-700'
+                      complaint.status === ComplaintStatus.IN_PROGRESS ? 'bg-amber-100 text-amber-700' :
+                        'bg-emerald-100 text-emerald-700'
                       }`}>
                       {complaint.status}
                     </span>

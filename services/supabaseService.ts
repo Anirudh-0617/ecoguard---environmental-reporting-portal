@@ -185,3 +185,21 @@ export const deleteComplaintInSupabase = async (id: string): Promise<void> => {
         throw error;
     }
 };
+
+export const deleteAllComplaints = async (): Promise<void> => {
+    if (!isSupabaseConfigured) {
+        console.warn('Supabase not configured');
+        return;
+    }
+
+    // Delete all rows where id is not null (effectively all rows)
+    const { error } = await supabase
+        .from('complaints')
+        .delete()
+        .neq('id', 'placeholder_impossible_id'); // Hack to delete all since .delete() requires a filter
+
+    if (error) {
+        console.error('Error deleting all complaints:', error);
+        throw error;
+    }
+};

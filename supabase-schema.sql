@@ -40,6 +40,7 @@ ALTER TABLE complaints ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Anyone can view complaints" ON complaints;
 DROP POLICY IF EXISTS "Anyone can insert complaints" ON complaints;
 DROP POLICY IF EXISTS "Anyone can update complaints" ON complaints;
+DROP POLICY IF EXISTS "Anyone can delete complaints" ON complaints;
 
 -- Policy: Anyone can view complaints (for public tracking)
 CREATE POLICY "Anyone can view complaints" 
@@ -57,6 +58,12 @@ CREATE POLICY "Anyone can insert complaints"
 CREATE POLICY "Anyone can update complaints" 
   ON complaints 
   FOR UPDATE 
+  USING (true);
+
+-- Policy: Anyone can delete complaints (DEMO MODE: ALLOW DELETION)
+CREATE POLICY "Anyone can delete complaints" 
+  ON complaints 
+  FOR DELETE 
   USING (true);
 
 -- Create index for faster queries
