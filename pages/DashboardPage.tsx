@@ -256,45 +256,29 @@ const DashboardPage: React.FC = () => {
               <p className="text-gray-500 text-sm mb-6">Find local recycling and waste centers instantly.</p>
 
               <div className="space-y-3 mb-6">
-                <button
-                  onClick={() => handleSearchNearby("Recycling centers near me")}
-                  disabled={isSearching}
-                  className="w-full flex items-center gap-3 bg-gray-50 p-4 rounded-2xl font-bold text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-all border border-transparent"
+                <a
+                  href="https://www.google.com/maps/search/Recycling+centers"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full flex items-center gap-3 bg-gray-50 p-4 rounded-2xl font-bold text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-all border border-transparent decoration-0"
                 >
                   <Recycle className="w-5 h-5" />
                   {t('recyclingHubs')}
-                </button>
+                  <ExternalLink className="w-4 h-4 ml-auto opacity-50" />
+                </a>
+
                 <button
-                  onClick={() => handleSearchNearby("Waste management offices near me")}
-                  disabled={isSearching}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate('/resources');
+                  }}
                   className="w-full flex items-center gap-3 bg-gray-50 p-4 rounded-2xl font-bold text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-all border border-transparent"
                 >
                   <ShieldCheck className="w-5 h-5" />
                   {t('envAuthorities')}
+                  <ArrowRight className="w-4 h-4 ml-auto opacity-50" />
                 </button>
               </div>
-
-              {isSearching ? (
-                <div className="py-8 text-center text-emerald-600">
-                  <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2" />
-                  <span className="text-xs font-bold uppercase">Locating...</span>
-                </div>
-              ) : nearbyResults && (
-                <div className="space-y-2 animate-in fade-in slide-in-from-right-4">
-                  {nearbyResults.links.slice(0, 3).map((link, i) => (
-                    <a
-                      key={i}
-                      href={link.uri}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-between bg-emerald-50/50 p-3 rounded-xl hover:bg-emerald-50 transition-all group"
-                    >
-                      <span className="text-xs font-bold text-emerald-800 truncate pr-4">{link.title}</span>
-                      <ExternalLink className="w-3 h-3 text-emerald-600" />
-                    </a>
-                  ))}
-                </div>
-              )}
             </div>
 
             {/* Quick Tips */}
